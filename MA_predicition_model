@@ -1,0 +1,156 @@
+
+study("Prediction Modeling for Moving Average", overlay=true)
+// Following set of code creates a fully customizable array of Moving Averages. This indicators come with an added feature of being able to illustrate a predictive pattern in choosen chart upto 5 points in ahead with 2 being the minimum. Once initiatied a user may alter the # of tools they prefer to use and alter their averaging length. Furthermore, the user may alternate between 3 different type of moving averages, smooth, exponential, and weighted.
+//---------------------------------------------------------------------------------------------------------------
+src_in=input(close, title="Source")
+incompletecandles=input(true, title="Include current unclosed current candle")
+type="SMA"	// default moving average type
+forecasttype=input(defval="flat", options=["flat", "linreg"], title="MA Forecast Type (flat assumes prices stay the same / linreg does n period LR forecast)")
+linreglen=input(3,title="# of candles to use in linear regression")	// default candles 3
+show1=input(true, title="Plot MA")
+len1=input(20, title="MA Len")
+show2=input(true, title="Plot MA")
+len2=input(30, title="MA Len")
+show3=input(true, title="Plot MA")
+len3=input(50, title="MA Len")
+Show4=input(true, title="Plot MA")
+Len4=input(77, title="MA Len")
+Show5=input(true, title="Plot MA")
+Len5=input(100, title="MA Len")
+Show6=input(true, title="Plot Long MA")
+Len6=input(128, title="MA Len")
+Show7=input(true, title="Plot MA")
+Len7=input(200, title="MA Len")
+Show8=input(true, title="Plot MA")
+Len8=input(341, title="MA Len")
+//---------------------------------------------------------------------------------------------------------------
+
+// Selection of different MA types, smooth, exponential, weighted
+matype(_type,_src,_len)=>
+    _len==0 ? _src :
+     _type=="SMA"?sma(_src,_len):
+     _type=="EMA"?ema(_src,_len):
+    _type=="WMA"?wma(_src,_len):
+     na
+
+forecast(_type,_src,_flen,_lrlen)=>
+    _type=="flat" ? _src :
+     _type=="linreg" ? linreg(_src,_lrlen,_flen) : na
+
+// These colors can be adjusted under settings, with the first 3 being the primary choices.
+col1=blue
+col2=red
+col3=yellow
+col4=grey
+col5= black
+col7=orange
+col6=purple
+col8=black
+
+bar = incompletecandles ? 0 : 1
+src=src_in[bar]
+
+showma1=matype(type,src,len1)
+showma2=matype(type,src,len2)
+showma3=matype(type,src,len3) 
+showma4=matype(type,src,len4)
+showma5=matype(type,src,len5)
+showma6=matype(type,src,len6)
+showma7=matype(type,src,len7) 
+showma8=matype(type,src,len8)
+
+//---------------------------------------------------------------------------------------------------------------
+// Prediction Code 
+
+forecast1=forecast(forecasttype,src,1,linreglen)
+forecast2=forecast(forecasttype,src,2,linreglen)
+forecast3=forecast(forecasttype,src,3,linreglen)
+forecast4=forecast(forecasttype,src,4,linreglen)
+forecast5=forecast(forecasttype,src,5,linreglen)
+forecast6=forecast(forecasttype,src,6,linreglen)
+forecast7=forecast(forecasttype,src,7,linreglen)
+forecast8=forecast(forecasttype,src,8,linreglen)
+
+//---------------------------------------------------------------------------------------------------------------
+// Moving Average Forcast 
+
+show1forecast1=show1 ? ((matype(type,src,len1-1)*(len1-1))+forecast1)/len1 : na
+show1forecast2=show1 ? ((matype(type,src,len1-2)*(len1-2))+forecast1+forecast2)/len1 : na
+show1forecast3=show1 ? ((matype(type,src,len1-3)*(len1-3))+forecast1+forecast2+forecast3)/len1 : na
+
+show2forecast1=show2 ? ((matype(type,src,len2-1)*(len2-1))+forecast1)/len2 : na
+show2forecast2=show2 ? ((matype(type,src,len2-2)*(len2-2))+forecast1+forecast2)/len2 : na
+show2forecast3=show2 ? ((matype(type,src,len2-3)*(len2-3))+forecast1+forecast2+forecast3)/len2 : na
+
+show3forecast1=show3 ? ((matype(type,src,len3-1)*(len3-1))+forecast1)/len3 : na
+show3forecast2=show3 ? ((matype(type,src,len3-2)*(len3-2))+forecast1+forecast2)/len3 : na
+show3forecast3=show3 ? ((matype(type,src,len3-3)*(len3-3))+forecast1+forecast2+forecast3)/len3 : na
+
+show4forecast1=show4 ? ((matype(type,src,len4-1)*(len4-1))+forecast1)/len4 : na
+show4forecast2=show4 ? ((matype(type,src,len4-2)*(len4-2))+forecast1+forecast2)/len4 : na
+show4forecast3=show4 ? ((matype(type,src,len4-3)*(len4-3))+forecast1+forecast2+forecast3)/len4 : na
+
+show5forecast1=show5 ? ((matype(type,src,len5-1)*(len5-1))+forecast1)/len5 : na
+show5forecast2=show5 ? ((matype(type,src,len5-2)*(len5-2))+forecast1+forecast2)/len5 : na
+show5forecast3=show5 ? ((matype(type,src,len5-3)*(len5-3))+forecast1+forecast2+forecast3)/len5 : na
+
+show6forecast1=show6 ? ((matype(type,src,len6-1)*(len6-1))+forecast1)/len6 : na
+show6forecast2=show6 ? ((matype(type,src,len6-2)*(len6-2))+forecast1+forecast2)/len6 : na
+show6forecast3=show6 ? ((matype(type,src,len6-3)*(len6-3))+forecast1+forecast2+forecast3)/len6 : na
+
+show7forecast1=show7 ? ((matype(type,src,len7-1)*(len7-1))+forecast1)/len7 : na
+show7forecast2=show7 ? ((matype(type,src,len7-2)*(len7-2))+forecast1+forecast2)/len7 : na
+show7forecast3=show7 ? ((matype(type,src,len7-3)*(len7-3))+forecast1+forecast2+forecast3)/len7 : na
+
+show8forecast1=show8 ? ((matype(type,src,len8-1)*(len8-1))+forecast1)/len8 : na
+show8forecast2=show8 ? ((matype(type,src,len8-2)*(len8-2))+forecast1+forecast2)/len8 : na
+show8forecast3=show8 ? ((matype(type,src,len8-3)*(len8-3))+forecast1+forecast2+forecast3)/len8 : na
+
+
+//---------------------------------------------------------------------------------------------------------------
+// Plotting Moving Averages on Chart
+
+plot(show1 ? showma1 : na, color= col1, linewidth=3, offset=(-1*bar), title="MA")
+plot(show2 ? showma2 : na, color= col2, linewidth=3, offset=(-1*bar), title="MA")
+plot(show2 ? showma3 : na, color= col3, linewidth=3, offset=(-1*bar), title="MA")
+plot(show4 ? showma4 : na,color=col4, linewidth=3, offset=(-1*bar), title="MA")
+plot(show5 ? showma5 : na,color=col5, linewidth=3, offset=(-1*bar), title="MA")
+plot(show6 ? showma6 : na,color=col6, linewidth=3, offset=(-1*bar), title="MA")
+plot(show7 ? showma7 : na,color=col7, linewidth=3, offset=(-1*bar), title="MA")
+plot(show8 ? showma8 : na,color=col8, linewidth=3, offset=(-1*bar), title="MA")
+
+
+//---------------------------------------------------------------------------------------------------------------
+//Plotting Moving Averages Predications on Chart 
+
+plot(show1 ? show1forecast1 : na,color=col1, linewidth=2, style=circles, title="Short MA Forecast 1", offset=1-bar, show_last=1)
+plot(show1 ? show1forecast2 : na,color=col1, linewidth=2, style=circles, title="Short MA Forecast 2", offset=2-bar, show_last=1)
+plot(show1 ? show1forecast3 : na,color=col1, linewidth=2, style=circles, title="Short MA Forecast 3", offset=3-bar, show_last=1)
+
+plot(show2 ? show2forecast1 : na,color=col2, linewidth=2, style=circles, title="Mid MA Forecast 1", offset=1-bar, show_last=1)
+plot(show2 ? show2forecast2 : na,color=col2, linewidth=2, style=circles, title="Mid MA Forecast 2", offset=2-bar, show_last=1)
+plot(show2 ? show2forecast3 : na,color=col2, linewidth=2, style=circles, title="Mid MA Forecast 3", offset=3-bar, show_last=1)
+
+plot(show3 ? show3forecast1 : na,color=col3, linewidth=2, style=circles, title="Long MA Forecast 1", offset=1-bar, show_last=1)
+plot(show3 ? show3forecast2 : na,color=col3, linewidth=2, style=circles, title="Long MA Forecast 2", offset=2-bar, show_last=1)
+plot(show3 ? show3forecast3 : na,color=col3, linewidth=2, style=circles, title="Long MA Forecast 3", offset=3-bar, show_last=1)
+
+plot(show4 ? show4forecast1 : na,color=col4, linewidth=2, style=circles, title="Long MA Forecast 1", offset=1-bar, show_last=1)
+plot(show4 ? show4forecast2 : na,color=col4, linewidth=2, style=circles, title="Long MA Forecast 2", offset=2-bar, show_last=1)
+plot(show4 ? show4forecast3 : na,color=col4, linewidth=2, style=circles, title="Long MA Forecast 3", offset=3-bar, show_last=1)
+
+plot(show5 ? show5forecast1 : na,color=col5, linewidth=2, style=circles, title="Long MA Forecast 1", offset=1-bar, show_last=1)
+plot(show5 ? show5forecast2 : na,color=col5, linewidth=2, style=circles, title="Long MA Forecast 2", offset=2-bar, show_last=1)
+plot(show5 ? show5forecast3 : na,color=col5, linewidth=2, style=circles, title="Long MA Forecast 3", offset=3-bar, show_last=1)
+
+plot(show6 ? show6forecast1 : na,color=col6, linewidth=2, style=circles, title="Long MA Forecast 1", offset=1-bar, show_last=1)
+plot(show6 ? show6forecast2 : na,color=col6, linewidth=2, style=circles, title="Long MA Forecast 2", offset=2-bar, show_last=1)
+plot(show6 ? show3forecast3 : na,color=col6, linewidth=2, style=circles, title="Long MA Forecast 3", offset=3-bar, show_last=1)
+
+plot(show7 ? show7forecast1 : na,color=col7, linewidth=2, style=circles, title="Long MA Forecast 1", offset=1-bar, show_last=1)
+plot(show7 ? show7forecast2 : na,color=col7, linewidth=2, style=circles, title="Long MA Forecast 2", offset=2-bar, show_last=1)
+plot(show7 ? show7forecast3 : na,color=col7, linewidth=2, style=circles, title="Long MA Forecast 3", offset=3-bar, show_last=1)
+
+plot(show8 ? show8forecast1 : na,color=col8, linewidth=2, style=circles, title="Long MA Forecast 1", offset=1-bar, show_last=1)
+plot(show8 ? show8forecast2 : na,color=col8, linewidth=2, style=circles, title="Long MA Forecast 2", offset=2-bar, show_last=1)
+plot(show8 ? show8forecast3 : na,color=col8, linewidth=2, style=circles, title="Long MA Forecast 3", offset=3-bar, show_last=1)
